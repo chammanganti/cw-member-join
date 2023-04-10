@@ -34,6 +34,11 @@ jobs:
           command: clippy
           args: -- -D warnings
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Generate docs ... 📚"
+
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -92,6 +97,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ steps.coverage.outputs.report }}
+
   deploy:
     runs-on: ubuntu-latest
     steps:
