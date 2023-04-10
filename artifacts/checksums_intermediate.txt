@@ -1,0 +1,1 @@
+60e7f88e5d834fcfaa5d65e0863ad70d1783fb7063d154f614bfa4272412a32f  ./target/wasm32-unknown-unknown/release/cw_member_join.wasm
