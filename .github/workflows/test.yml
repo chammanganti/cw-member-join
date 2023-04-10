@@ -3,7 +3,7 @@ name: Test
 on: [push]
 
 jobs:
-  ci:
+  lint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,16 +22,6 @@ jobs:
           override: true
           components: rustfmt, clippy
 
-      - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-
-      - name: Test
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-
       - name: Fmt
         uses: actions-rs/cargo@v1
         with:
@@ -43,3 +33,66 @@ jobs:
         with:
           command: clippy
           args: -- -D warnings
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+
+      - name: Test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Set up toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+
+      - name: Run test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --all
+        env:
+          CARGO_INCREMENTAL: "0"
+          RUSTFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
+          RUSTDOCFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Cpanic=abort -Zpanic_abort_tests"
+
+      - name: Run grcov
+        id: coverage
+        uses: actions-rs/grcov@v0.1
+
+      - name: Codecov upload
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ steps.coverage.outputs.report }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying ... 🚀"
