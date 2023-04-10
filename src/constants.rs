@@ -7,4 +7,4 @@ pub const ADDR_OWNER: &str = "owner";
 pub const ADDR_USER_1: &str = "user1";
 pub const CONTRACT_1: &str = "Contract 1";
 
-pub const ERR_REQUIRED_ADMIN_ON_INIT: &str = "At least 1 admin is required during initialization";
+pub const ERR_REQUIRED_ADMIN_ON_INIT: &str = "An admin is required during initialization";
