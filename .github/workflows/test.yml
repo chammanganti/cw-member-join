@@ -56,13 +56,13 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --target wasm32-unknown-unknown --release --lib"
+          args: --release
 
       - name: Upload binary
         uses: actions/upload-artifact@v3
         with:
-          name: cw-member-join.wasm
-          path: /home/runner/work/cw-member-join/cw-member-join/target/wasm32-unknown-unknown/release/cw-member-join.wasm
+          name: libcw_member_join.d
+          path: /home/runner/work/cw-member-join/cw-member-join/target/release/libcw_member_join.d
           retention-days: 7
 
   test:
@@ -113,7 +113,7 @@ jobs:
       - name: Download binary
         uses: actions/download-artifact@v3
         with:
-          name: cw-member-join.wasm
+          name: libcw_member_join.d
 
       - run: pwd && ls -la
 
