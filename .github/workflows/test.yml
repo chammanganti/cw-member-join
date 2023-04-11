@@ -57,10 +57,12 @@ jobs:
         with:
           command: build
 
-      - name: Test
-        uses: actions-rs/cargo@v1
+      - name: Upload binary
+        uses: actions/upload-artifact@v3
         with:
-          command: test
+          name: cw-member-join
+          path: /home/runner/work/cw-member-join/cw-member-join
+          retention-days: 7
 
   test:
     runs-on: ${{ matrix.os }}
@@ -106,3 +108,11 @@ jobs:
     needs: test
     steps:
       - run: echo "Deploying ... 🚀"
+
+      - name: Download binary
+        uses: actions/download-artifact@v3
+        with:
+          name: cw-member-join  
+
+      - run: pwd && ls -la
+
